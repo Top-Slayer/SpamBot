@@ -12,7 +12,9 @@ class App:
 
     text = str()
     time = int()
+
     isSpamming = False
+    active_get_position = False
 
     def __init__(self, window):
         window.title("SpamTextBot")
@@ -27,16 +29,21 @@ class App:
         # text for time of delay
         tk.Label(window,text="Times of delay :").pack()
         # input for time
-        App.time = tk.Entry(window,width=3)
+        App.time = tk.Entry(window,width=10)
         App.time.pack()
 
         # position of cersor
         tk.Label(window,text="Position of Cursor : ").pack()
         self.position = tk.Label(window, text="{}, {}".format(self.x, self.y))
         self.position.pack()
+        tk.Button(window, text="Select position", command=self.changeActiveGetPosition).pack()
 
         # enter all value to spam
         tk.Label(window, text="\"Ctrl + shift + g\" to start and repeat to stop").pack(pady=10)
+
+        # start and stop title
+        self.title_display = tk.Label(window, text="Stop", fg="red")
+        self.title_display.pack()
 
         # exit function
         tk.Label(window, text="\"Ctrl + q\" to exit the program").pack()
@@ -51,16 +58,16 @@ class App:
         print(f"Application Running [ {App.isRunning} ]")
 
         while App.isRunning:
-            if win32api.GetKeyState(win32con.VK_LBUTTON) < 0: # check if left mouse button is pressed
+            if win32api.GetKeyState(win32con.VK_LBUTTON) < 0 and App.active_get_position: # check if left mouse button is pressed
                 self.getPositionClick()
+                App.active_get_position = False
 
             elif win32api.GetKeyState(win32con.VK_CONTROL) < 0 and win32api.GetKeyState(ord('Q')) < 0: 
-                # self.exit_app()
-                threading.Thread(target=self.exit_app).start()
+                self.exit_app()
 
             elif win32api.GetKeyState(win32con.VK_CONTROL) < 0 and win32api.GetKeyState(win32con.VK_SHIFT) < 0 and win32api.GetKeyState(ord('G')) < 0:
                 # App.isSpamming = True
-                time.sleep(1)
+                time.sleep(0.5)
                 threading.Thread(target=self.sendSpambot).start()
 
         print(f"Application Running [ {App.isRunning} ]")
@@ -68,26 +75,35 @@ class App:
     def getPositionClick(self):
         App.x, App.y = win32api.GetCursorPos()
 
-        if App.x != self.x and App.y != self.y:
-            self.x = App.x
-            self.y = App.y
-            self.position.config(text="{}, {}".format(App.x, App.y))
-            print("[Func: getPositionClick] Position: {}, {}".format(App.x, App.y))
+        self.x = App.x
+        self.y = App.y
+        self.position.config(text="{}, {}".format(App.x, App.y))
+        print("Position: {}, {}".format(App.x, App.y))
+
+        # if App.x != self.x and App.y != self.y:
+        #     self.x = App.x
+        #     self.y = App.y
+        #     self.position.config(text="{}, {}".format(App.x, App.y))
+        #     print("Position: {}, {}".format(App.x, App.y))
+
+    def changeActiveGetPosition(self):
+        App.active_get_position = True
 
     def exit_app(self):
-        print("\nExiting application...\n")
+        print("\nExiting application...")
         App.isRunning = False
         window.quit()
 
     def sendSpambot(self):
-        App.isSpamming = not App.isSpamming
-        print("starting" if App.isSpamming else "stopping")
-
         try:
-            float(App.time.get())
+            float(App.time.get()) # get() function use for return text string from entry box
         except ValueError:
             messagebox.showwarning("Warning", "Please enter any number in Time of delay box")
             return
+
+        App.isSpamming = not App.isSpamming
+        self.title_display.config(text="Start" if App.isSpamming else "Stop", fg="green" if App.isSpamming else "red")
+        print("starting" if App.isSpamming else "stopping")
 
         while App.isSpamming:
             print('. ', end='')
