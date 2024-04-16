@@ -18,6 +18,6 @@
   > [!NOTE]
   > Please, turn off window security for download this program.
   > 
-  > Don't have any virus believe me :)
+  > Don't have any virus trust me :)
 
   Link: https://github.com/Top-Slayer/SpamText/raw/main/dist/GuiSpamBot.exe
