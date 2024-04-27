@@ -5,7 +5,7 @@
 
   Create your environment and access into virtual environment:
 
-    pythom -m venv [Your_Folder_Name]
+    python -m venv [Your_Folder_Name]
     [Your_Folder_Name]\Scripts\activate.bat
 
   Install library from requirement file:
