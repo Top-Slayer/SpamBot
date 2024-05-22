@@ -67,8 +67,9 @@ class App:
 
             elif win32api.GetKeyState(win32con.VK_CONTROL) < 0 and win32api.GetKeyState(win32con.VK_SHIFT) < 0 and win32api.GetKeyState(ord('G')) < 0:
                 # App.isSpamming = True
-                time.sleep(0.5)
                 threading.Thread(target=self.sendSpambot).start()
+
+            time.sleep(0.1)
 
         print(f"Application Running [ {App.isRunning} ]")
 
