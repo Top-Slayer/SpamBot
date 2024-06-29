@@ -1,3 +1,4 @@
+# This program support only Window os
 ## Edition for Window
   Install virtual environment for Python:
   
